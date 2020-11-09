@@ -25,7 +25,7 @@ namespace Library.Bot.Session
         {
             return ClientsState[clientId];
         }
-        public void SetClientCurrentCommand(long clientId, string currentCommand, string commandStateId, string commandStateValue)
+        public void SetClientCurrentCommand(long clientId, string currentCommand, string commandStateId = "", string commandStateValue = "")
         {
             ClientsState[clientId].CurrentCommand = currentCommand;
             ClientsState[clientId].SetState(commandStateId, commandStateValue);
@@ -34,8 +34,7 @@ namespace Library.Bot.Session
         {
             if(!ClientsState.ContainsKey(clientId))
             {
-                Console.WriteLine("Estado guadado");
-                ClientSession cs = new ClientSession("inicio");
+                ClientSession cs = new ClientSession(clientId, "none");
                 ClientsState[clientId] = cs;
             }
         }

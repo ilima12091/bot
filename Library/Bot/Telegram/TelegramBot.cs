@@ -1,4 +1,6 @@
 using System;
+using Library.Bot.Conditions;
+using Library.Bot.Handlers;
 using Library.Bot.Session;
 using Telegram.Bot;
 using Telegram.Bot.Args;
@@ -79,7 +81,23 @@ namespace Library.Bot.Telegram
             Chat ChatInfo = message.Chat;
             string messageText = message.Text.ToLower();
             SessionManager.Instance.StoreClientSession(ChatInfo.Id);
+            ClientSession clientSession = SessionManager.Instance.GetClientSession(ChatInfo.Id);
+            CommandRequest commandRequest = new CommandRequest(messageText, clientSession);
             
+            AbstractHandler<CommandRequest> defaultCommandHandler = new DefaultCommandHandler(new DefaultTrueCondition());
+            AbstractHandler<CommandRequest> startCommandHandler = new StartCommandHandler(new StartCommandCondition());
+            AbstractHandler<CommandRequest> countryCommandHandler = new CountryCommandHandler(new CountryCommandCondition());
+            startCommandHandler.Successor = countryCommandHandler;
+            countryCommandHandler.Successor = defaultCommandHandler;
+            startCommandHandler.Handle(commandRequest, Instance);
+        }
+        public async void SendMessage(string text, long clientId)
+        {
+            ITelegramBotClient client = Instance.Client;
+            await client.SendTextMessageAsync(
+                chatId: clientId,
+                text: text
+            );
         }
     }
 }

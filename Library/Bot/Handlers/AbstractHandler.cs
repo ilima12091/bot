@@ -10,20 +10,20 @@ namespace Library.Bot.Handlers
         {
             this.condition = condition;
         }
-        public virtual void Handle(T request)
+        public virtual void Handle(T request, IBot bot)
         {
             if (this.condition.IsSatisfied(request))
             {
-                this.handleRequest(request);
+                this.handleRequest(request, bot);
             }
             else
             {
                 if (this.Successor != null)
                 {
-                    this.Successor.Handle(request);
+                    this.Successor.Handle(request, bot);
                 }
             }
         }
-        protected abstract void handleRequest(T request);
+        protected abstract void handleRequest(T request, IBot bot);
     }
 }
