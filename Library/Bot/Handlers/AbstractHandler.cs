@@ -1,4 +1,5 @@
 using Library.Bot.Conditions;
+using Library.Bot.Interfaces;
 
 namespace Library.Bot.Handlers
 {
@@ -10,7 +11,7 @@ namespace Library.Bot.Handlers
         {
             this.condition = condition;
         }
-        public virtual void Handle(T request, IBot bot)
+        public virtual void Handle(T request, IMessageChannel bot)
         {
             if (this.condition.IsSatisfied(request))
             {
@@ -24,6 +25,6 @@ namespace Library.Bot.Handlers
                 }
             }
         }
-        protected abstract void handleRequest(T request, IBot bot);
+        protected abstract void handleRequest(T request, IMessageChannel bot);
     }
 }

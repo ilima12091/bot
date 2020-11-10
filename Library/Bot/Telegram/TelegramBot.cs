@@ -1,15 +1,16 @@
 using System;
-using Library.Bot.Conditions;
-using Library.Bot.Handlers;
 using Library.Bot.Session;
 using Telegram.Bot;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types;
+using Library.Bot.Interfaces;
+using System.Collections.Generic;
 
 namespace Library.Bot.Telegram
 {
-    public class TelegramBot : IBot
+    public class TelegramBot : IMessageChannel
     {
+        private List<IObserver> observers = new List<IObserver>();
         private const string TELEBRAM_BOT_TOKEN = "1138036723:AAFQOEIIpQ4NMss4pbDb65arcRfptPQs4Lg";
         private static TelegramBot instance;
         private ITelegramBotClient bot;
@@ -62,7 +63,40 @@ namespace Library.Bot.Telegram
                 return instance;
             }
         }
-        public void Start()
+        public async void SendMessage(string text, string clientId)
+        {
+            ITelegramBotClient client = Instance.Client;
+            await client.SendTextMessageAsync(
+                chatId: long.Parse(clientId),
+                text: text
+            );
+        }
+
+        public void Subscribe(IObserver observer)
+        {
+            if (!observers.Contains(observer))
+            {
+                observers.Add(observer);
+            }
+            StartBot();
+        }
+
+        public void Unsubscribe(IObserver observer)
+        {
+            if (observers.Contains(observer))
+            {
+                this.observers.Remove(observer);
+            }
+        }
+
+        public void NotifyObservers(CommandRequest commandRequest)
+        {
+            foreach (IObserver observer in observers)
+            {
+                observer.Update(commandRequest);
+            }
+        }
+        private void StartBot()
         {
             ITelegramBotClient bot = this.Client;
             bot.OnMessage += this.OnMessage;
@@ -80,30 +114,10 @@ namespace Library.Bot.Telegram
             Message message = messageEventArgs.Message;
             Chat ChatInfo = message.Chat;
             string messageText = message.Text.ToLower();
-            SessionManager.Instance.StoreClientSession(ChatInfo.Id);
-            ClientSession clientSession = SessionManager.Instance.GetClientSession(ChatInfo.Id);
+            SessionManager.Instance.StoreClientSession(ChatInfo.Id.ToString());
+            ClientSession clientSession = SessionManager.Instance.GetClientSession(ChatInfo.Id.ToString());
             CommandRequest commandRequest = new CommandRequest(messageText, clientSession);
-            
-            AbstractHandler<CommandRequest> defaultCommandHandler = new DefaultCommandHandler(new DefaultTrueCondition());
-            AbstractHandler<CommandRequest> startCommandHandler = new StartCommandHandler(new StartCommandCondition());
-            AbstractHandler<CommandRequest> countryCommandHandler = new CountryCommandHandler(new CountryCommandCondition());
-            AbstractHandler<CommandRequest> seasonCommandHandler = new SeasonCommandHandler(new SeasonCommandCondition());
-            AbstractHandler<CommandRequest> menuCommandHandler = new MenuCommandHandler(new MenuCommandCondition());
-
-            startCommandHandler.Successor = countryCommandHandler;
-            countryCommandHandler.Successor = seasonCommandHandler;
-            seasonCommandHandler.Successor = menuCommandHandler;
-            menuCommandHandler.Successor = defaultCommandHandler;
-
-            startCommandHandler.Handle(commandRequest, Instance);
-        }
-        public async void SendMessage(string text, long clientId)
-        {
-            ITelegramBotClient client = Instance.Client;
-            await client.SendTextMessageAsync(
-                chatId: clientId,
-                text: text
-            );
+            NotifyObservers(commandRequest);
         }
     }
 }

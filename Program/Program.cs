@@ -1,5 +1,7 @@
 ﻿using System;
+using Library.Bot.Interfaces;
 using Library.Bot.Telegram;
+using Library.Bot;
 
 namespace Program
 {
@@ -7,8 +9,9 @@ namespace Program
     {
         static void Main(string[] args)
         {
-            TelegramBot telegramBot = TelegramBot.Instance;
-            telegramBot.Start();
+            IMessageChannel telegramChannel = TelegramBot.Instance;
+            Bot bot = Bot.Instance;
+            bot.Start(telegramChannel);
         }
     }
 }

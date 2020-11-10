@@ -20,17 +20,17 @@ namespace Library.Bot.Session
                 return instance;
             }
         }
-        private Dictionary<long, ClientSession> ClientsState = new Dictionary<long, ClientSession>();
-        public ClientSession GetClientSession(long clientId)
+        private Dictionary<string, ClientSession> ClientsState = new Dictionary<string, ClientSession>();
+        public ClientSession GetClientSession(string clientId)
         {
             return ClientsState[clientId];
         }
-        public void SetClientCurrentCommand(long clientId, string currentCommand, string commandStateId = "", string commandStateValue = "")
+        public void SetClientCurrentCommand(string clientId, string currentCommand, string commandStateId = "", string commandStateValue = "")
         {
             ClientsState[clientId].CurrentCommand = currentCommand;
             ClientsState[clientId].SetState(commandStateId, commandStateValue);
         }
-        public void StoreClientSession(long clientId)
+        public void StoreClientSession(string clientId)
         {
             if(!ClientsState.ContainsKey(clientId))
             {
