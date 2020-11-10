@@ -12,6 +12,7 @@ namespace Library.Bot.Handlers
         protected override void handleRequest(CommandRequest request, IBot bot)
         {
             bot.SendMessage("Ingrese la temporada que le interesa", request.ClientSession.Id);
+            SessionManager.Instance.SetClientCurrentCommand(request.ClientSession.Id, "temporada", "pais", request.MessageText.Trim());
         }
     }
 }

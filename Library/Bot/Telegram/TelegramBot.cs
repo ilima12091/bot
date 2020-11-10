@@ -87,8 +87,14 @@ namespace Library.Bot.Telegram
             AbstractHandler<CommandRequest> defaultCommandHandler = new DefaultCommandHandler(new DefaultTrueCondition());
             AbstractHandler<CommandRequest> startCommandHandler = new StartCommandHandler(new StartCommandCondition());
             AbstractHandler<CommandRequest> countryCommandHandler = new CountryCommandHandler(new CountryCommandCondition());
+            AbstractHandler<CommandRequest> seasonCommandHandler = new SeasonCommandHandler(new SeasonCommandCondition());
+            AbstractHandler<CommandRequest> menuCommandHandler = new MenuCommandHandler(new MenuCommandCondition());
+
             startCommandHandler.Successor = countryCommandHandler;
-            countryCommandHandler.Successor = defaultCommandHandler;
+            countryCommandHandler.Successor = seasonCommandHandler;
+            seasonCommandHandler.Successor = menuCommandHandler;
+            menuCommandHandler.Successor = defaultCommandHandler;
+
             startCommandHandler.Handle(commandRequest, Instance);
         }
         public async void SendMessage(string text, long clientId)
