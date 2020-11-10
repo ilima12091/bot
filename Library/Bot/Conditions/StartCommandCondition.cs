@@ -4,7 +4,7 @@ namespace Library.Bot.Conditions
     {
         public bool IsSatisfied(CommandRequest request)
         {
-            if (request.MessageText.Equals("/start"))
+            if (request.MessageText.Equals("/start") && request.ClientSession.CurrentCommand.Equals("none"))
             {
                 return true;
             }

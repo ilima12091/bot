@@ -30,20 +30,28 @@ namespace Library.Bot
         }
         public void Update(CommandRequest commandRequest)
         {
+            AbstractHandler<CommandRequest> exitCommandHandler = new ExitCommandHandler(new ExitCommandCondition());
             AbstractHandler<CommandRequest> defaultCommandHandler = new DefaultCommandHandler(new DefaultTrueCondition());
             AbstractHandler<CommandRequest> startCommandHandler = new StartCommandHandler(new StartCommandCondition());
             AbstractHandler<CommandRequest> countryCommandHandler = new CountryCommandHandler(new CountryCommandCondition());
             AbstractHandler<CommandRequest> seasonCommandHandler = new SeasonCommandHandler(new SeasonCommandCondition());
             AbstractHandler<CommandRequest> leagueCommandHandler = new LeagueCommandHandler(new LeagueCommandCondition());
-            AbstractHandler<CommandRequest> menuCommandHandler = new MenuCommandHandler(new MenuCommandCondition());
+            AbstractHandler<CommandRequest> calendarCommandHandler = new CalendarCommandHandler(new CalendarCommandCondition());
+            AbstractHandler<CommandRequest> topScorersCommandHandler = new TopScorersCommandHandler(new TopScorersCommandCondition());
+            AbstractHandler<CommandRequest> teamsCommandHandler = new TeamsCommandHandler(new TeamsCommandCondition());
+            AbstractHandler<CommandRequest> tableCommandHandler = new TableCommandHandler(new TableCommandCondition());
 
+            exitCommandHandler.Successor = startCommandHandler;
             startCommandHandler.Successor = countryCommandHandler;
             countryCommandHandler.Successor = seasonCommandHandler;
             seasonCommandHandler.Successor = leagueCommandHandler;
-            leagueCommandHandler.Successor = menuCommandHandler;
-            menuCommandHandler.Successor = defaultCommandHandler;
+            leagueCommandHandler.Successor = calendarCommandHandler;
+            calendarCommandHandler.Successor = topScorersCommandHandler;
+            topScorersCommandHandler.Successor = teamsCommandHandler;
+            teamsCommandHandler.Successor = tableCommandHandler;
+            tableCommandHandler.Successor = defaultCommandHandler;
 
-            startCommandHandler.Handle(commandRequest, this.channel);
+            exitCommandHandler.Handle(commandRequest, this.channel);
         }
     }
 }

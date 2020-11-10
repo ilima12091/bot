@@ -4,7 +4,7 @@ namespace Library.Bot.Conditions
     {
         public bool IsSatisfied(CommandRequest request)
         {
-            if (request.ClientSession.CurrentCommand.Equals("calendario"))
+            if (request.ClientSession.CurrentCommand.Equals("menu") && request.MessageText.Trim().ToLower().Equals("1"))
             {
                 return true;
             }

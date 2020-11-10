@@ -10,7 +10,7 @@ namespace Library.Bot.Handlers
         }
         protected override void handleRequest(CommandRequest request, IMessageChannel bot)
         {
-            bot.SendMessage("Ingrese el comando /start para iniciar la interacción con el bot", request.ClientSession.Id);
+            bot.SendMessage("Ingrese el comando /start para iniciar la interacción con el bot. Puede salir del proceso de interacción el bot en cualquier momento ingresando /exit.", request.ClientSession.Id);
         }
     }
 }

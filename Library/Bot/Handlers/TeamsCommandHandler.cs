@@ -11,7 +11,7 @@ namespace Library.Bot.Handlers
         }
         protected override void handleRequest(CommandRequest request, IMessageChannel bot)
         {
-            bot.SendMessage("Seleccione uno de los equipos que forman parte de la liga <nombreLiga> para obtener más información o ingrese 0 para salir:\n1. Nacional\n2. Peñarol\n3. Defensor", request.ClientSession.Id);
+            bot.SendMessage("Seleccione uno de los equipos que forman parte de la liga <nombreLiga> para obtener más información:\n1. Nacional\n2. Peñarol\n3. Defensor", request.ClientSession.Id);
             SessionManager.Instance.SetClientCurrentCommand(request.ClientSession.Id, "none");
         }
     }

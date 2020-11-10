@@ -6,6 +6,7 @@ namespace Library.Bot.Session
     {
         public string Id { get; }
         public string CurrentCommand { get; set; }
+        public Dictionary<string, string> OptionsId { get; set; }
         public Dictionary<string, string> CommandState { get; set; }
         public void SetState(string commandStateId, string commandStateValue)
         {

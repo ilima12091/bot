@@ -25,10 +25,13 @@ namespace Library.Bot.Session
         {
             return ClientsState[clientId];
         }
-        public void SetClientCurrentCommand(string clientId, string currentCommand, string commandStateId = "", string commandStateValue = "")
+        public void SetClientCurrentCommand(string clientId, string currentCommand)
         {
             ClientsState[clientId].CurrentCommand = currentCommand;
-            ClientsState[clientId].SetState(commandStateId, commandStateValue);
+        }
+        public void SetState(string userId, string commandStateKey, string commandStateValue)
+        {
+            ClientsState[userId].SetState(commandStateKey, commandStateValue);
         }
         public void StoreClientSession(string clientId)
         {
@@ -37,6 +40,14 @@ namespace Library.Bot.Session
                 ClientSession cs = new ClientSession(clientId, "none");
                 ClientsState[clientId] = cs;
             }
+        }
+        public void StoreOptionsIds(string clientId, Dictionary<string, string> options)
+        {
+            ClientsState[clientId].OptionsId = options;
+        }
+        public string GetOptionId(string clientId, string option)
+        {
+            return ClientsState[clientId].OptionsId[option];
         }
     }
 }
