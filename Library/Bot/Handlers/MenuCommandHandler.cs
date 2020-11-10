@@ -25,9 +25,13 @@ namespace Library.Bot.Handlers
                 break;
                 case 3:
                     SessionManager.Instance.SetClientCurrentCommand(request.ClientSession.Id, "equipos");
+                    AbstractHandler<CommandRequest> teamsCommandHandler = new TeamsCommandHandler(new TeamsCommandCondition());
+                    teamsCommandHandler.Handle(request, bot);
                 break;
                 case 4:
-                    SessionManager.Instance.SetClientCurrentCommand(request.ClientSession.Id, "estadisticas");
+                    SessionManager.Instance.SetClientCurrentCommand(request.ClientSession.Id, "tabla");
+                    AbstractHandler<CommandRequest> tableCommandHandler = new TableCommandHandler(new TableCommandCondition());
+                    tableCommandHandler.Handle(request, bot);
                 break;
                 default:
                 break;

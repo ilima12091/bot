@@ -34,11 +34,13 @@ namespace Library.Bot
             AbstractHandler<CommandRequest> startCommandHandler = new StartCommandHandler(new StartCommandCondition());
             AbstractHandler<CommandRequest> countryCommandHandler = new CountryCommandHandler(new CountryCommandCondition());
             AbstractHandler<CommandRequest> seasonCommandHandler = new SeasonCommandHandler(new SeasonCommandCondition());
+            AbstractHandler<CommandRequest> leagueCommandHandler = new LeagueCommandHandler(new LeagueCommandCondition());
             AbstractHandler<CommandRequest> menuCommandHandler = new MenuCommandHandler(new MenuCommandCondition());
 
             startCommandHandler.Successor = countryCommandHandler;
             countryCommandHandler.Successor = seasonCommandHandler;
-            seasonCommandHandler.Successor = menuCommandHandler;
+            seasonCommandHandler.Successor = leagueCommandHandler;
+            leagueCommandHandler.Successor = menuCommandHandler;
             menuCommandHandler.Successor = defaultCommandHandler;
 
             startCommandHandler.Handle(commandRequest, this.channel);
